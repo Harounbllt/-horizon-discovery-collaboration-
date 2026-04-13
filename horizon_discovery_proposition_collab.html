@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Proposition de Collaboration — Horizon Discovery</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, sans-serif; background: #f8f7f4; color: #1a1a1a; padding: 2rem 1.5rem; max-width: 980px; margin: auto; }
+
+/* Header */
+.doc-header { background: #fff; border: 1px solid #e5e3de; border-radius: 14px; padding: 28px 28px 22px; margin-bottom: 2rem; }
+.doc-logo { font-size: 13px; font-weight: 700; color: #1D9E75; letter-spacing: 0.05em; margin-bottom: 4px; }
+.doc-title { font-size: 24px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
+.doc-subtitle { font-size: 13px; color: #888; margin-bottom: 16px; }
+.doc-meta { display: flex; gap: 20px; flex-wrap: wrap; }
+.meta-item { font-size: 12px; color: #555; }
+.meta-label { color: #888; }
+
+.section-title {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #888;
+  margin: 2.5rem 0 1rem; padding-bottom: 7px;
+  border-bottom: 1px solid #e5e3de;
+}
+.section-title:first-of-type { margin-top: 0; }
+
+.card { background: #fff; border: 1px solid #e5e3de; border-radius: 12px; padding: 18px; }
+.card-title { font-size: 14px; font-weight: 700; color: #1a1a1a; margin-bottom: 6px; }
+.card-sub { font-size: 12px; color: #888; margin-bottom: 14px; }
+.item { font-size: 12px; color: #555; padding: 5px 0; line-height: 1.7; border-top: 1px solid #f0eee9; }
+.item:first-of-type { border-top: none; }
+.item b { color: #1a1a1a; font-weight: 600; }
+
+.grid2 { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 14px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 7px; vertical-align: middle; }
+
+/* Modèles de collaboration */
+.model-card {
+  background: #fff; border: 1px solid #e5e3de; border-radius: 14px; overflow: hidden;
+}
+.model-header {
+  padding: 16px 18px 14px;
+  border-bottom: 1px solid #f0eee9;
+}
+.model-num {
+  display: inline-block; width: 26px; height: 26px; border-radius: 50%;
+  font-size: 12px; font-weight: 700; text-align: center; line-height: 26px;
+  margin-bottom: 8px;
+}
+.model-title { font-size: 15px; font-weight: 700; color: #1a1a1a; margin-bottom: 3px; }
+.model-desc { font-size: 12px; color: #888; }
+.model-body { padding: 16px 18px; }
+.model-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #888; margin: 12px 0 5px; }
+.model-label:first-child { margin-top: 0; }
+.model-item { font-size: 12px; color: #555; padding: 4px 0; line-height: 1.6; }
+.model-item b { color: #1a1a1a; }
+
+/* Calcul simulateur */
+.calc-box {
+  background: #f8f7f4; border: 1px solid #e5e3de; border-radius: 10px; padding: 14px 16px; margin-top: 12px;
+}
+.calc-title { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 10px; }
+.calc-row { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; border-top: 1px solid #ece9e3; font-size: 12px; }
+.calc-row:first-of-type { border-top: none; }
+.calc-key { color: #555; }
+.calc-val { font-weight: 600; color: #1a1a1a; }
+.calc-total { background: #fff; border-radius: 8px; border: 1px solid #e5e3de; padding: 10px 14px; margin-top: 10px; display: flex; justify-content: space-between; align-items: center; }
+.calc-total-label { font-size: 12px; font-weight: 700; }
+.calc-total-val { font-size: 18px; font-weight: 700; }
+
+/* Parts visuelles */
+.share-visual { display: flex; border-radius: 8px; overflow: hidden; height: 36px; margin: 10px 0; }
+.share-h { display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; }
+
+/* Highlight box */
+.highlight { border-left: 3px solid #1D9E75; background: #f0eee9; border-radius: 0 8px 8px 0; padding: 12px 14px; font-size: 13px; color: #1a1a1a; line-height: 1.7; margin-bottom: 12px; }
+.highlight.amber { border-left-color: #BA7517; }
+.highlight.blue { border-left-color: #378ADD; }
+.highlight.coral { border-left-color: #D85A30; }
+
+/* Tableau conditions */
+.cond-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.cond-table th { background: #f0eee9; padding: 9px 12px; text-align: left; font-weight: 600; font-size: 11px; color: #555; }
+.cond-table td { padding: 9px 12px; border-top: 1px solid #f0eee9; color: #555; line-height: 1.5; vertical-align: top; }
+.cond-table tr:hover td { background: #faf9f7; }
+
+/* Accord formel */
+.accord-section { background: #fff; border: 1px solid #e5e3de; border-radius: 12px; padding: 20px; }
+.accord-title { font-size: 14px; font-weight: 700; margin-bottom: 14px; color: #1a1a1a; }
+.accord-article { margin-bottom: 16px; }
+.accord-art-title { font-size: 12px; font-weight: 700; color: #1D9E75; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 0.05em; }
+.accord-art-body { font-size: 12px; color: #555; line-height: 1.8; }
+
+.badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 20px; }
+.bt { background: #E1F5EE; color: #0F6E56; }
+.ba { background: #FAEEDA; color: #854F0B; }
+.bb { background: #E6F1FB; color: #185FA5; }
+.bc { background: #FAECE7; color: #993C1D; }
+.bp { background: #EEEDFE; color: #534AB7; }
+
+.sign-area { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 2rem; }
+.sign-box { border: 1px dashed #ccc; border-radius: 8px; padding: 16px; text-align: center; }
+.sign-label { font-size: 11px; color: #888; margin-bottom: 8px; }
+.sign-name { font-size: 13px; font-weight: 600; color: #1a1a1a; margin-bottom: 4px; }
+.sign-line { height: 40px; border-bottom: 1px solid #e5e3de; margin: 10px 0 4px; }
+.sign-date { font-size: 11px; color: #888; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="doc-logo">HORIZON DISCOVERY — ANNABA</div>
+  <div class="doc-title">Proposition de Collaboration Commerciale</div>
+  <div class="doc-subtitle">Plateforme d'activités Outdoor × Agence de Voyage — Été 2026</div>
+  <div class="doc-meta">
+    <div class="meta-item"><span class="meta-label">Préparé par : </span>Horizon Discovery</div>
+    <div class="meta-item"><span class="meta-label">Destinataire : </span>Propriétaire de l'agence de voyage</div>
+    <div class="meta-item"><span class="meta-label">Date : </span>Juin 2026</div>
+    <div class="meta-item"><span class="meta-label">Validité : </span>30 jours</div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<div class="section-title">Contexte & opportunité</div>
+<div class="highlight">
+  Horizon Discovery est une plateforme d'activités outdoor basée à Annaba — kayak & paddle en mer, randonnées forêt/montagne, camping, visites culturelles et plages sauvages. Nous proposons à votre agence une collaboration structurée et mutuellement bénéfique pour l'été 2026, avec des modèles clairs de partage des bénéfices et des commissions transparentes.
+</div>
+<div class="grid2">
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#1D9E75;"></span>Ce qu'apporte Horizon Discovery</div>
+    <div class="item"><b>Activités prêtes à vendre</b> — kayak, paddle, rando, camping, plages sauvages</div>
+    <div class="item"><b>Encadrement professionnel</b> — guides, équipement, sécurité</div>
+    <div class="item"><b>Contenu marketing</b> — photos, vidéos, présence Instagram active</div>
+    <div class="item"><b>Base clients existante</b> — liste WhatsApp + abonnés fidèles</div>
+    <div class="item"><b>Logistique terrain</b> — organisation, transport, matériel</div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span class="dot" style="background:#BA7517;"></span>Ce qu'apporte l'Agence de Voyage</div>
+    <div class="item"><b>Réseau clients</b> — touristes locaux, nationaux, diaspora été</div>
+    <div class="item"><b>Bureau physique</b> — point de vente et encaissement</div>
+    <div class="item"><b>Crédibilité commerciale</b> — agrément, factures, contrats</div>
+    <div class="item"><b>Packages séjours</b> — possibilité d'intégrer nos activités aux séjours</div>
+    <div class="item"><b>Force de vente</b> — conseillers qui recommandent nos sorties</div>
+  </div>
+</div>
+
+<!-- ═══ MODÈLE 1 ═══ -->
+<div class="section-title">Modèle 1 — Sortie en co-organisation (partage des bénéfices)</div>
+<div class="highlight amber">
+  Ce modèle s'applique quand les deux parties amènent des clients sur la même sortie. Le bénéfice net total est partagé proportionnellement au nombre de clients apportés par chacun.
+</div>
+
+<div class="model-card">
+  <div class="model-header">
+    <div class="model-num" style="background:#FAEEDA; color:#854F0B;">1</div>
+    <div class="model-title">Partage proportionnel au nombre de clients</div>
+    <div class="model-desc">La part de bénéfice de chacun = (ses clients ÷ total clients) × bénéfice net total</div>
+  </div>
+  <div class="model-body">
+
+    <div class="model-label">Formule appliquée</div>
+    <div style="background:#f8f7f4; border-radius:8px; padding:12px 14px; font-size:13px; color:#1a1a1a; line-height:2; font-family: monospace;">
+      Part Horizon = (Clients Horizon ÷ Total clients) × Bénéfice net<br>
+      Part Agence &nbsp;= (Clients Agence &nbsp;÷ Total clients) × Bénéfice net
+    </div>
+
+    <div class="model-label">Exemple concret — Votre cas</div>
+    <div class="calc-box">
+      <div class="calc-title">Simulation sortie type</div>
+      <div class="calc-row"><div class="calc-key">Bénéfice net total de la sortie</div><div class="calc-val" style="color:#1D9E75;">30,000 DA</div></div>
+      <div class="calc-row"><div class="calc-key">Clients apportés par Horizon Discovery</div><div class="calc-val">20 clients — soit 66.7%</div></div>
+      <div class="calc-row"><div class="calc-key">Clients apportés par l'Agence</div><div class="calc-val">10 clients — soit 33.3%</div></div>
+
+      <div style="margin: 12px 0 8px; font-size:11px; font-weight:600; color:#888;">Répartition visuelle</div>
+      <div class="share-visual">
+        <div class="share-h" style="width:66.7%; background:#1D9E75; color:#fff;">Horizon 2/3</div>
+        <div class="share-h" style="width:33.3%; background:#BA7517; color:#fff;">Agence 1/3</div>
+      </div>
+
+      <div class="calc-total">
+        <div>
+          <div class="calc-total-label" style="color:#1D9E75;">Horizon Discovery reçoit</div>
+          <div style="font-size:11px; color:#888;">20 clients ÷ 30 × 30,000 DA</div>
+        </div>
+        <div class="calc-total-val" style="color:#1D9E75;">20,000 DA</div>
+      </div>
+      <div class="calc-total" style="margin-top:8px;">
+        <div>
+          <div class="calc-total-label" style="color:#BA7517;">L'Agence de voyage reçoit</div>
+          <div style="font-size:11px; color:#888;">10 clients ÷ 30 × 30,000 DA</div>
+        </div>
+        <div class="calc-total-val" style="color:#BA7517;">10,000 DA</div>
+      </div>
+    </div>
+
+    <div class="model-label">Règles de ce modèle</div>
+    <div class="model-item"><span class="dot" style="background:#1D9E75;"></span><b>Comptage des clients :</b> chaque client est attribué à la partie qui a effectué la réservation (Horizon = DM Instagram / WhatsApp Horizon ; Agence = réservation au bureau)</div>
+    <div class="model-item"><span class="dot" style="background:#1D9E75;"></span><b>Bénéfice net :</b> calculé après déduction de tous les frais opérationnels (guide, transport, matériel, eau, collations)</div>
+    <div class="model-item"><span class="dot" style="background:#1D9E75;"></span><b>Paiement :</b> chaque partie collecte l'argent de ses propres clients. Bilan et ajustement final le soir même de la sortie</div>
+    <div class="model-item"><span class="dot" style="background:#1D9E75;"></span><b>Minimum garanti :</b> si l'agence amène moins de 5 clients, sa part minimale est de 3,000 DA (coût d'opportunité)</div>
+  </div>
+</div>
+
+<!-- ═══ MODÈLE 2 ═══ -->
+<div class="section-title">Modèle 2 — Commission sur billets vendus au bureau (sorties non-collaboration)</div>
+<div class="highlight blue">
+  Ce modèle s'applique quand Horizon Discovery organise seul une sortie, mais l'agence sert de point de vente physique et encaisse pour le compte d'Horizon. L'agence reçoit une commission fixe par billet vendu.
+</div>
+
+<div class="model-card">
+  <div class="model-header">
+    <div class="model-num" style="background:#E6F1FB; color:#185FA5;">2</div>
+    <div class="model-title">Commission fixe par billet vendu au bureau</div>
+    <div class="model-desc">L'agence est point de vente. Elle encaisse et reverse le net à Horizon après déduction de sa commission.</div>
+  </div>
+  <div class="model-body">
+
+    <div class="model-label">Fonctionnement</div>
+    <div class="model-item"><span class="dot" style="background:#378ADD;"></span>Le client réserve une sortie Horizon Discovery et choisit de payer au bureau de l'agence</div>
+    <div class="model-item"><span class="dot" style="background:#378ADD;"></span>L'agence encaisse le prix du billet en intégralité</div>
+    <div class="model-item"><span class="dot" style="background:#378ADD;"></span>L'agence reverse à Horizon : prix du billet − 150 DA de commission</div>
+    <div class="model-item"><span class="dot" style="background:#378ADD;"></span>Reversement chaque lundi pour tous les billets vendus la semaine précédente</div>
+
+    <div class="model-label">Simulation — 50 billets vendus en juillet</div>
+    <div class="calc-box">
+      <div class="calc-title">Exemple mensuel</div>
+      <div class="calc-row"><div class="calc-key">Prix billet par client</div><div class="calc-val">2,000 DA (exemple)</div></div>
+      <div class="calc-row"><div class="calc-key">Billets vendus au bureau ce mois</div><div class="calc-val">50 billets</div></div>
+      <div class="calc-row"><div class="calc-key">Total encaissé par l'agence</div><div class="calc-val">100,000 DA</div></div>
+      <div class="calc-row"><div class="calc-key">Commission agence (150 DA × 50)</div><div class="calc-val" style="color:#BA7517;">7,500 DA</div></div>
+      <div class="calc-total">
+        <div>
+          <div class="calc-total-label" style="color:#185FA5;">Horizon Discovery reçoit</div>
+          <div style="font-size:11px; color:#888;">100,000 − 7,500 DA</div>
+        </div>
+        <div class="calc-total-val" style="color:#185FA5;">92,500 DA</div>
+      </div>
+      <div class="calc-total" style="margin-top:8px;">
+        <div>
+          <div class="calc-total-label" style="color:#BA7517;">L'Agence conserve</div>
+          <div style="font-size:11px; color:#888;">150 DA × 50 billets</div>
+        </div>
+        <div class="calc-total-val" style="color:#BA7517;">7,500 DA</div>
+      </div>
+    </div>
+
+    <div class="model-label">Barème commission selon volume mensuel</div>
+    <table class="cond-table" style="margin-top:6px;">
+      <tr><th>Billets vendus / mois</th><th>Commission par billet</th><th>Gain agence (exemple 50 billets)</th><th>Avantage</th></tr>
+      <tr><td>1 – 20 billets</td><td><b>150 DA / billet</b></td><td>3,000 DA</td><td>Tarif standard</td></tr>
+      <tr><td>21 – 50 billets</td><td><b>175 DA / billet</b></td><td>8,750 DA</td><td>+25 DA bonus volume</td></tr>
+      <tr><td>51 – 100 billets</td><td><b>200 DA / billet</b></td><td>10,000 DA</td><td>+50 DA bonus volume</td></tr>
+      <tr><td>100+ billets</td><td><b>250 DA / billet</b></td><td>Négocié</td><td>Partenariat prioritaire</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- ═══ MODÈLE 3 ═══ -->
+<div class="section-title">Modèle 3 — Intégration dans les packages séjours de l'agence</div>
+<div class="highlight coral">
+  Ce modèle cible les clients de l'agence qui réservent des séjours complets (hébergement + activités). Horizon Discovery fournit le volet activités outdoor en tant que prestataire exclusif.
+</div>
+
+<div class="model-card">
+  <div class="model-header">
+    <div class="model-num" style="background:#FAECE7; color:#993C1D;">3</div>
+    <div class="model-title">Prestataire activités dans les packages séjours</div>
+    <div class="model-desc">L'agence vend des séjours "tout inclus" avec les activités Horizon intégrées. Horizon facture à l'agence un tarif préférentiel.</div>
+  </div>
+  <div class="model-body">
+
+    <div class="model-label">Fonctionnement</div>
+    <div class="model-item"><span class="dot" style="background:#D85A30;"></span>L'agence crée des packages : ex. "Week-end Annaba Nature" = hébergement + 1 sortie kayak + 1 rando</div>
+    <div class="model-item"><span class="dot" style="background:#D85A30;"></span>L'agence fixe son propre prix de vente au client final</div>
+    <div class="model-item"><span class="dot" style="background:#D85A30;"></span>Horizon facture à l'agence un tarif de gros préférentiel (−20% vs tarif public)</div>
+    <div class="model-item"><span class="dot" style="background:#D85A30;"></span>La marge entre le tarif de gros et le prix de vente = bénéfice agence</div>
+
+    <div class="model-label">Exemple de package</div>
+    <div class="calc-box">
+      <div class="calc-title">Package "Week-end Aventure Annaba" — par personne</div>
+      <div class="calc-row"><div class="calc-key">Prix public sortie kayak Horizon</div><div class="calc-val">2,500 DA</div></div>
+      <div class="calc-row"><div class="calc-key">Prix public sortie rando Horizon</div><div class="calc-val">1,500 DA</div></div>
+      <div class="calc-row"><div class="calc-key">Total tarif public activités</div><div class="calc-val">4,000 DA</div></div>
+      <div class="calc-row"><div class="calc-key">Tarif de gros agence (−20%)</div><div class="calc-val" style="color:#D85A30;">3,200 DA facturé à l'agence</div></div>
+      <div class="calc-row"><div class="calc-key">Prix de vente agence au client</div><div class="calc-val">4,500 DA (package complet)</div></div>
+      <div class="calc-total">
+        <div>
+          <div class="calc-total-label" style="color:#D85A30;">Marge agence sur les activités</div>
+          <div style="font-size:11px; color:#888;">4,500 − 3,200 DA</div>
+        </div>
+        <div class="calc-total-val" style="color:#D85A30;">1,300 DA / personne</div>
+      </div>
+    </div>
+
+    <div class="model-label">Conditions de ce modèle</div>
+    <div class="model-item"><span class="dot" style="background:#D85A30;"></span><b>Commande minimum :</b> 6 personnes par sortie pour bénéficier du tarif de gros</div>
+    <div class="model-item"><span class="dot" style="background:#D85A30;"></span><b>Réservation :</b> minimum 5 jours à l'avance pour garantir disponibilité guide et matériel</div>
+    <div class="model-item"><span class="dot" style="background:#D85A30;"></span><b>Annulation :</b> remboursement 100% si annulation 48h avant ; 50% entre 24h et 48h</div>
+  </div>
+</div>
+
+<!-- ═══ MODÈLE 4 ═══ -->
+<div class="section-title">Modèle 4 — Recommandation active (apport de clientèle)</div>
+
+<div class="model-card">
+  <div class="model-header">
+    <div class="model-num" style="background:#EEEDFE; color:#534AB7;">4</div>
+    <div class="model-title">Commission d'apport — l'agence recommande Horizon</div>
+    <div class="model-desc">Sans co-organisation ni point de vente. L'agence recommande Horizon à ses clients, et reçoit une commission sur chaque client converti.</div>
+  </div>
+  <div class="model-body">
+
+    <div class="model-label">Fonctionnement</div>
+    <div class="model-item"><span class="dot" style="background:#7F77DD;"></span>L'agent de voyage mentionne Horizon Discovery à ses clients lors de leurs visites ou appels</div>
+    <div class="model-item"><span class="dot" style="background:#7F77DD;"></span>Le client reçoit un <b>code de réduction unique</b> lié à l'agence (ex : CODE-AGENCE)</div>
+    <div class="model-item"><span class="dot" style="background:#7F77DD;"></span>Quand un client utilise ce code pour réserver chez Horizon, l'agence reçoit une commission</div>
+    <div class="model-item"><span class="dot" style="background:#7F77DD;"></span>Commission : <b>300 DA par client converti</b> — payée chaque semaine</div>
+
+    <div class="model-label">Avantage double</div>
+    <div class="model-item"><span class="dot" style="background:#7F77DD;"></span>Le client bénéficie d'une réduction de 200 DA sur sa sortie (fidélisation agence)</div>
+    <div class="model-item"><span class="dot" style="background:#7F77DD;"></span>L'agence reçoit 300 DA par client sans aucune charge logistique</div>
+    <div class="model-item"><span class="dot" style="background:#7F77DD;"></span>Horizon gagne un nouveau client tracké avec un coût d'acquisition maîtrisé</div>
+
+    <div class="calc-box">
+      <div class="calc-title">Simulation — 30 recommandations en juillet</div>
+      <div class="calc-row"><div class="calc-key">Clients recommandés par l'agence</div><div class="calc-val">30 personnes</div></div>
+      <div class="calc-row"><div class="calc-key">Taux de conversion estimé</div><div class="calc-val">70% → 21 clients réels</div></div>
+      <div class="calc-row"><div class="calc-key">Commission agence par client</div><div class="calc-val">300 DA</div></div>
+      <div class="calc-total">
+        <div>
+          <div class="calc-total-label" style="color:#534AB7;">Gain agence ce mois</div>
+          <div style="font-size:11px; color:#888;">21 × 300 DA — zéro effort logistique</div>
+        </div>
+        <div class="calc-total-val" style="color:#534AB7;">6,300 DA</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TABLEAU COMPARATIF ═══ -->
+<div class="section-title">Tableau comparatif des 4 modèles</div>
+<div class="card" style="padding: 0; overflow: hidden;">
+  <table class="cond-table" style="width:100%;">
+    <tr>
+      <th style="width:20%;">Modèle</th>
+      <th>Quand l'utiliser</th>
+      <th>Ce que gagne l'agence</th>
+      <th>Ce que gagne Horizon</th>
+      <th>Effort agence</th>
+    </tr>
+    <tr>
+      <td><b style="color:#854F0B;">Modèle 1</b><br><span style="font-size:11px;">Co-organisation</span></td>
+      <td>Sortie organisée ensemble, clients des deux côtés</td>
+      <td>1/3 du bénéfice net (si 1/3 des clients)</td>
+      <td>2/3 du bénéfice net + notoriété</td>
+      <td>Élevé — implication totale</td>
+    </tr>
+    <tr>
+      <td><b style="color:#185FA5;">Modèle 2</b><br><span style="font-size:11px;">Point de vente</span></td>
+      <td>Horizon organise seul, agence encaisse</td>
+      <td>150 à 250 DA par billet vendu</td>
+      <td>Prix billet − commission agence</td>
+      <td>Faible — juste encaissement</td>
+    </tr>
+    <tr>
+      <td><b style="color:#D85A30;">Modèle 3</b><br><span style="font-size:11px;">Package séjours</span></td>
+      <td>Clients séjours complets, touristes</td>
+      <td>Marge libre sur prix de revente</td>
+      <td>Volume garanti + visibilité agence</td>
+      <td>Moyen — intégration package</td>
+    </tr>
+    <tr>
+      <td><b style="color:#534AB7;">Modèle 4</b><br><span style="font-size:11px;">Recommandation</span></td>
+      <td>Mention passive, bouche-à-oreille</td>
+      <td>300 DA par client converti</td>
+      <td>Nouveaux clients à coût fixe</td>
+      <td>Très faible — juste une mention</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══ CONDITIONS GÉNÉRALES ═══ -->
+<div class="section-title">Conditions générales de la collaboration</div>
+<table class="cond-table">
+  <tr><th style="width:30%;">Point</th><th>Condition proposée</th></tr>
+  <tr><td><b>Durée de l'accord</b></td><td>Période estivale : 1er juin – 30 septembre 2026. Reconduction tacite si aucune des parties ne met fin à l'accord 15 jours avant échéance.</td></tr>
+  <tr><td><b>Paiements</b></td><td>Modèle 1 : règlement le soir même de la sortie. Modèle 2 : reversement chaque lundi. Modèle 3 : facturation 5 jours avant la sortie. Modèle 4 : paiement chaque semaine.</td></tr>
+  <tr><td><b>Comptabilité</b></td><td>Horizon tient un registre partagé (Google Sheets ou WhatsApp) de tous les clients, billets et commissions. L'agence a accès en lecture à tout moment.</td></tr>
+  <tr><td><b>Annulation sortie</b></td><td>En cas de mauvais temps ou force majeure : report à la semaine suivante. Remboursement complet si le client refuse le report.</td></tr>
+  <tr><td><b>Exclusivité</b></td><td>Non exclusive. Chaque partie reste libre de travailler avec d'autres partenaires. Clause de non-concurrence directe (l'agence ne crée pas ses propres sorties outdoor pendant la durée de l'accord).</td></tr>
+  <tr><td><b>Résiliation anticipée</b></td><td>Préavis de 10 jours par message écrit (WhatsApp ou email). Les sorties déjà vendues sont honorées même après résiliation.</td></tr>
+  <tr><td><b>Litiges</b></td><td>Règlement à l'amiable en priorité. En cas d'échec, tribunal de commerce d'Annaba.</td></tr>
+</table>
+
+<!-- ═══ ACCORD FORMEL ═══ -->
+<div class="section-title">Accord de partenariat — Version à signer</div>
+<div class="accord-section">
+  <div class="accord-title">ACCORD DE COLLABORATION COMMERCIALE — ÉTÉ 2026</div>
+
+  <div class="accord-article">
+    <div class="accord-art-title">Article 1 — Parties</div>
+    <div class="accord-art-body">
+      <b>Partie A :</b> Horizon Discovery, plateforme d'activités outdoor, Annaba — représentée par : ___________________________<br>
+      <b>Partie B :</b> Agence de Voyage _________________________, Annaba — représentée par : ___________________________
+    </div>
+  </div>
+
+  <div class="accord-article">
+    <div class="accord-art-title">Article 2 — Objet</div>
+    <div class="accord-art-body">
+      Les deux parties conviennent de collaborer pour la promotion et la vente des activités outdoor proposées par Horizon Discovery, selon les modèles et conditions définis dans la présente proposition, acceptée et signée par les deux parties.
+    </div>
+  </div>
+
+  <div class="accord-article">
+    <div class="accord-art-title">Article 3 — Modèles retenus</div>
+    <div class="accord-art-body">
+      Les parties cochent les modèles applicables à leur collaboration :<br><br>
+      ☐ &nbsp;<b>Modèle 1</b> — Co-organisation : partage proportionnel du bénéfice net<br>
+      ☐ &nbsp;<b>Modèle 2</b> — Point de vente : commission de 150 DA par billet vendu au bureau<br>
+      ☐ &nbsp;<b>Modèle 3</b> — Packages séjours : tarif de gros −20% accordé à l'agence<br>
+      ☐ &nbsp;<b>Modèle 4</b> — Recommandation : commission de 300 DA par client converti
+    </div>
+  </div>
+
+  <div class="accord-article">
+    <div class="accord-art-title">Article 4 — Durée et renouvellement</div>
+    <div class="accord-art-body">
+      Accord valable du <b>1er juin 2026</b> au <b>30 septembre 2026</b>. Renouvelable par accord mutuel écrit.
+    </div>
+  </div>
+
+  <div class="accord-article">
+    <div class="accord-art-title">Article 5 — Engagements réciproques</div>
+    <div class="accord-art-body">
+      Horizon Discovery s'engage à : fournir des activités de qualité, assurer la sécurité des participants, informer l'agence des dates et disponibilités avec au moins 7 jours d'avance, et régler toutes les commissions dans les délais convenus.<br><br>
+      L'agence s'engage à : promouvoir les activités Horizon auprès de sa clientèle, assurer un encaissement rigoureux et un reversement ponctuel, et ne pas proposer d'activités outdoor concurrentes directes pendant la durée de l'accord.
+    </div>
+  </div>
+
+  <div class="sign-area">
+    <div class="sign-box">
+      <div class="sign-label">Signature Partie A</div>
+      <div class="sign-name">Horizon Discovery</div>
+      <div class="sign-line"></div>
+      <div class="sign-date">Date : _____ / _____ / 2026</div>
+    </div>
+    <div class="sign-box">
+      <div class="sign-label">Signature Partie B</div>
+      <div class="sign-name">Agence de Voyage _______________</div>
+      <div class="sign-line"></div>
+      <div class="sign-date">Date : _____ / _____ / 2026</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
